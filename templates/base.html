@@ -27,9 +27,16 @@
       .btn-primary { background: #4f8cff; border-color: #4f8cff; }
       .btn-outline-light { border-color: rgba(255,255,255,0.25); }
       .alert { border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.07); color: #e8eefc; }
+      .creature { position: fixed; inset: auto; width: 160px; height: 160px; border-radius: 999px; filter: blur(2px); opacity: 0.55; pointer-events: none; z-index: 0; }
+      .creature.one { left: -40px; bottom: 12vh; background: radial-gradient(circle at 30% 30%, rgba(167,199,255,0.9), rgba(167,199,255,0.1) 60%, transparent 70%); animation: floaty 9s ease-in-out infinite; }
+      .creature.two { right: -50px; top: 18vh; background: radial-gradient(circle at 30% 30%, rgba(250,170,190,0.8), rgba(250,170,190,0.10) 60%, transparent 70%); animation: floaty 11s ease-in-out infinite reverse; }
+      @keyframes floaty { 0%,100% { transform: translate(0,0) scale(1);} 50% { transform: translate(14px,-18px) scale(1.04);} }
+      main, nav { position: relative; z-index: 1; }
     </style>
   </head>
   <body>
+    <div class="creature one" aria-hidden="true"></div>
+    <div class="creature two" aria-hidden="true"></div>
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
       <div class="container">
         <a class="navbar-brand fw-semibold" href="{{ url_for('index') }}">For You</a>
@@ -41,6 +48,7 @@
             <li class="nav-item"><a class="nav-link" href="{{ url_for('quotes') }}">Quotes</a></li>
             <li class="nav-item"><a class="nav-link" href="{{ url_for('songs') }}">Songs</a></li>
             <li class="nav-item"><a class="nav-link" href="{{ url_for('videos') }}">Videos</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('bot') }}">Rude Roye Bot</a></li>
           </ul>
           <div class="d-flex gap-2">
             {% if current_user.is_authenticated %}
@@ -75,5 +83,6 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
   </body>
 </html>

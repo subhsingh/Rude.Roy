@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Rude Roye Bot · For You{% endblock %}
+
+{% block hero %}
+  <section class="hero py-4">
+    <div class="container">
+      <div class="d-flex flex-wrap justify-content-between align-items-end gap-3">
+        <div>
+          <div class="badge badge-soft rounded-pill px-3 py-2 mb-2">Sathee Roy personality</div>
+          <h1 class="h3 fw-semibold mb-1">Rude Roye Bot</h1>
+          <div class="muted">Arrogant. Egotistic. Mostly “no”. Weirdly romantic sometimes.</div>
+        </div>
+        <div class="d-flex gap-2">
+          <a class="btn btn-outline-light" href="{{ url_for('index') }}">Back home</a>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card p-3">
+        <div id="chatLog" class="vstack gap-2" style="max-height: 55vh; overflow: auto;"></div>
+        <div class="border-top mt-3 pt-3" style="border-color: rgba(255,255,255,0.12) !important;">
+          <form id="chatForm" class="d-flex gap-2">
+            <input id="chatInput" class="form-control" placeholder="Say something... (try: biryani, friends, dhamki)" autocomplete="off" />
+            <button class="btn btn-primary" type="submit">Send</button>
+          </form>
+          <div class="small muted mt-2">Tip: the bot is intentionally rude. It’s the character.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.RUDE_ROYE_CHAT = { mountId: "chatLog", formId: "chatForm", inputId: "chatInput" };
+  </script>
+{% endblock %}
+

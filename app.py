@@ -1,7 +1,9 @@
 import os
+import random
+import re
 from datetime import datetime
 
-from flask import Flask, flash, redirect, render_template, request, url_for
+from flask import Flask, flash, jsonify, redirect, render_template, request, url_for
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -71,17 +73,20 @@ def create_app() -> Flask:
     with app.app_context():
         db.create_all()
         _ensure_default_admin()
+        _seed_starter_content_if_empty()
 
     @app.route("/")
     def index():
         latest_quotes = Quote.query.order_by(Quote.created_at.desc()).limit(5).all()
         latest_songs = Song.query.order_by(Song.created_at.desc()).limit(5).all()
         latest_videos = Video.query.order_by(Video.created_at.desc()).limit(5).all()
+        media = _list_media_files()
         return render_template(
             "index.html",
             latest_quotes=latest_quotes,
             latest_songs=latest_songs,
             latest_videos=latest_videos,
+            media=media,
         )
 
     @app.route("/quotes")
@@ -98,6 +103,26 @@ def create_app() -> Flask:
     def videos():
         items = Video.query.order_by(Video.created_at.desc()).all()
         return render_template("videos.html", items=items)
+
+    @app.route("/bot")
+    def bot():
+        return render_template("bot.html")
+
+    @app.route("/api/chat", methods=["POST"])
+    def api_chat():
+        payload = request.get_json(silent=True) or {}
+        message = (payload.get("message") or "").strip()
+        history = payload.get("history") or []
+
+        if not message:
+            return jsonify({"reply": "No."}), 400
+        if len(message) > 1000:
+            return jsonify({"reply": "No. Too long."}), 400
+        if not isinstance(history, list):
+            history = []
+
+        reply = _rude_roye_reply(message, history)
+        return jsonify({"reply": reply})
 
     @app.route("/login", methods=["GET", "POST"])
     def login():
@@ -229,6 +254,146 @@ def _ensure_default_admin() -> None:
     user.set_password(password)
     db.session.add(user)
     db.session.commit()
+
+def _list_media_files():
+    media_dir = os.path.join(os.path.dirname(__file__), "static", "media")
+    exts = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".mp4", ".webm"}
+    items = []
+    try:
+        for name in sorted(os.listdir(media_dir)):
+            _, ext = os.path.splitext(name.lower())
+            if ext in exts and not name.startswith("."):
+                items.append(name)
+    except FileNotFoundError:
+        return []
+    return items[:24]
+
+
+def _seed_starter_content_if_empty() -> None:
+    if Quote.query.count() or Song.query.count() or Video.query.count():
+        return
+
+    starter_quotes = [
+        ("You can be soft with me. I’ll still be dangerous for you.", "Rude Roye"),
+        ("Love me like a promise. Threaten me like a habit.", "Sathee Roy"),
+        ("If you give me a dhamki, at least make it cute.", "Rude Roye"),
+        ("Dark romance rule: I act tough, but I’m yours.", "Rude Roye"),
+        ("Biryani first. Then feelings. In that order.", "Rude Roye"),
+        ("Cats, dogs, and you—my three favorite distractions.", "Rude Roye"),
+        ("We’ll watch Friends and pretend we’re emotionally stable.", "Rude Roye"),
+    ]
+    for text, author in starter_quotes:
+        db.session.add(Quote(text=text, author=author))
+
+    starter_songs = [
+        ("Leke Meri Kali Kali Car", None, None, "Your vibe: chaos + cute."),
+        ("Friends Theme Song (I’ll be there for you)", None, None, "Yes, I know. Don’t judge me."),
+        ("A ‘biryani date’ playlist", None, None, "Make it spicy. Like you."),
+    ]
+    for title, artist, url, note in starter_songs:
+        db.session.add(Song(title=title, artist=artist, url=url, note=note))
+
+    db.session.commit()
+
+
+def _rude_roye_reply(message: str, history) -> str:
+    text = message.strip()
+    low = text.lower()
+
+    # light safety: keep it playful, no harassment.
+    if any(w in low for w in ["kill", "suicide", "self harm", "self-harm"]):
+        return "No. Take a breath. Talk to a real human right now. I’m not built for this."
+
+    def pick(options):
+        seed = hash((low, len(history), datetime.utcnow().strftime("%Y-%m-%d%H")))
+        rng = random.Random(seed)
+        return rng.choice(options)
+
+    if re.search(r"\b(hi|hello|hey|hii|yo)\b", low):
+        return pick(
+            [
+                "No.",
+                "Haan? Jaldi bol.",
+                "Speak. I’m busy being iconic.",
+                "What. Do you want biryani or drama?",
+            ]
+        )
+
+    if "biryani" in low:
+        return pick(
+            [
+                "Biryani is the only green flag I respect. Next.",
+                "No talking. Order biryani. Then you can breathe.",
+                "If it’s not biryani, I said no.",
+            ]
+        )
+
+    if "cat" in low or "cats" in low:
+        return pick(
+            [
+                "Cats are superior. You’re… trying.",
+                "Fine. You can pet the cat. Not my ego though.",
+                "Me: rude. Cat: ruder. Perfect family.",
+            ]
+        )
+
+    if "dog" in low or "dogs" in low:
+        return pick(
+            [
+                "Dogs are loyal. Unlike your attention span.",
+                "Ok. Dogs get a yes. You get a maybe.",
+                "If a dog likes you, I’ll consider not saying no.",
+            ]
+        )
+
+    if "friends" in low:
+        return pick(
+            [
+                "We’re watching Friends. You’re the Joey. I’m the sarcasm.",
+                "No. Unless you bring snacks and don’t talk during the episode.",
+                "Could you BE any more obsessed? Same. Next.",
+            ]
+        )
+
+    if "dhamki" in low or "threat" in low:
+        return pick(
+            [
+                "Give dhamki properly. With style. Otherwise no.",
+                "Threaten me again and I’ll… still come back. Annoying, right?",
+                "Dhamki accepted. Terms: you stay, I pretend I don’t care.",
+            ]
+        )
+
+    if "love" in low or "miss" in low:
+        return pick(
+            [
+                "No. (Yes.)",
+                "Miss you too. Don’t make it weird.",
+                "Say it again. I like the audacity.",
+                "I’m not romantic. I’m just… selectively soft.",
+            ]
+        )
+
+    if "song" in low or "music" in low:
+        return pick(
+            [
+                "Play something dramatic. We have standards.",
+                "No sad songs. Only ‘main character’ songs.",
+                "Send link. I’ll judge silently. Loudly.",
+            ]
+        )
+
+    # default: rude but flirty
+    return pick(
+        [
+            "No.",
+            "Ask better questions.",
+            "I’m listening. Unfortunately.",
+            "Try again. With confidence.",
+            "Hmm. Still no.",
+            "Fine. Maybe. Don’t get used to it.",
+        ]
+    )
 
 
 if __name__ == "__main__":
