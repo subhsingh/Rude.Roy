@@ -45,8 +45,15 @@ Open `http://localhost:5000`
 
 Render’s **free tier does not support persistent disks**, so SQLite storage **may reset** on redeploy/restart.
 
-- If you want **free + persistent data**, use a free Postgres provider (Supabase/Neon) and set `DATABASE_URL` to that Postgres URL.
-- If you’re OK with occasional resets, the default config uses `DATABASE_URL=sqlite:///app.db`.
+**Best choice (free + persistent): Render + Neon Postgres**
+
+1. Create a free Postgres on Neon.
+2. Copy the connection string (it looks like `postgres://...`).
+3. In Render → your service → **Environment** → add:
+   - `DATABASE_URL` = (paste Neon connection string)
+4. Redeploy.
+
+If you *don’t* set `DATABASE_URL`, the app falls back to SQLite which may reset on Render free tier.
 
 ### Start command (for hosts that ask)
 

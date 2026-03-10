@@ -12,6 +12,4 @@ services:
         value: admin
       - key: ADMIN_PASSWORD
         value: change-me-now-then-update-in-admin
-      - key: DATABASE_URL
-        value: sqlite:///app.db
 

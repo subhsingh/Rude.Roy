@@ -11,6 +11,15 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 login_manager.login_view = "login"
 
+def _normalize_database_url(url: str) -> str:
+    # Many hosts (and Neon) provide URLs that start with "postgres://".
+    # SQLAlchemy expects the "postgresql" scheme, and we prefer psycopg (v3) driver.
+    if url.startswith("postgres://"):
+        url = "postgresql://" + url[len("postgres://") :]
+    if url.startswith("postgresql://"):
+        url = "postgresql+psycopg://" + url[len("postgresql://") :]
+    return url
+
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -52,9 +61,8 @@ class Video(db.Model):
 def create_app() -> Flask:
     app = Flask(__name__)
     app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-change-me")
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
-        "DATABASE_URL", "sqlite:///app.db"
-    )
+    database_url = os.environ.get("DATABASE_URL", "sqlite:///app.db").strip()
+    app.config["SQLALCHEMY_DATABASE_URI"] = _normalize_database_url(database_url)
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     db.init_app(app)
