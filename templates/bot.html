@@ -6,9 +6,9 @@
     <div class="container">
       <div class="d-flex flex-wrap justify-content-between align-items-end gap-3">
         <div>
-          <div class="badge badge-soft rounded-pill px-3 py-2 mb-2">Sathee Roy personality</div>
+          <div class="badge badge-soft rounded-pill px-3 py-2 mb-2">Sathee Roy mode</div>
           <h1 class="h3 fw-semibold mb-1">Rude Roye Bot</h1>
-          <div class="muted">Arrogant. Egotistic. Mostly “no”. Weirdly romantic sometimes.</div>
+          <div class="muted">Rude. Arrogant. Egotistic. Soft only for her (don’t tell anyone).</div>
         </div>
         <div class="d-flex gap-2">
           <a class="btn btn-outline-light" href="{{ url_for('index') }}">Back home</a>
@@ -19,23 +19,52 @@
 {% endblock %}
 
 {% block content %}
-  <div class="row justify-content-center">
+  <div class="row g-3 justify-content-center">
+    <div class="col-lg-4">
+      <div class="card p-3 h-100">
+        <div class="d-flex align-items-center gap-3 mb-2">
+          <div class="rounded-circle" style="width:44px;height:44px; background: radial-gradient(circle at 30% 30%, rgba(79,140,255,0.9), rgba(79,140,255,0.15)); border:1px solid rgba(255,255,255,0.14);"></div>
+          <div>
+            <div class="fw-semibold">Rude Roye</div>
+            <div class="small muted">Says “no” professionally.</div>
+          </div>
+        </div>
+        <div class="small muted mb-3">
+          Try poking the weak spots: biryani, cats/dogs, Friends, dhamki, love.
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+          <button class="btn btn-sm btn-outline-light" data-prompt="biryani">Biryani</button>
+          <button class="btn btn-sm btn-outline-light" data-prompt="cats">Cats</button>
+          <button class="btn btn-sm btn-outline-light" data-prompt="dogs">Dogs</button>
+          <button class="btn btn-sm btn-outline-light" data-prompt="friends tv show">Friends</button>
+          <button class="btn btn-sm btn-outline-light" data-prompt="give me a dhamki">Dhamki</button>
+          <button class="btn btn-sm btn-outline-light" data-prompt="i miss you">Miss you</button>
+        </div>
+        <div class="border-top mt-3 pt-3 small muted" style="border-color: rgba(255,255,255,0.12) !important;">
+          It’s intentionally rude. If it says “No.” that means it’s working.
+        </div>
+      </div>
+    </div>
     <div class="col-lg-8">
-      <div class="card p-3">
-        <div id="chatLog" class="vstack gap-2" style="max-height: 55vh; overflow: auto;"></div>
-        <div class="border-top mt-3 pt-3" style="border-color: rgba(255,255,255,0.12) !important;">
+      <div class="card p-0 overflow-hidden">
+        <div class="px-3 py-2 d-flex align-items-center justify-content-between" style="border-bottom: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.03);">
+          <div class="small muted">Chat</div>
+          <div id="typing" class="small muted" style="opacity:0;">Rude Roye is judging…</div>
+        </div>
+        <div id="chatLog" class="vstack gap-2 p-3" style="max-height: 62vh; overflow: auto;"></div>
+        <div class="p-3" style="border-top: 1px solid rgba(255,255,255,0.12);">
           <form id="chatForm" class="d-flex gap-2">
-            <input id="chatInput" class="form-control" placeholder="Say something... (try: biryani, friends, dhamki)" autocomplete="off" />
+            <input id="chatInput" class="form-control" placeholder="Say something… (try being bold)" autocomplete="off" />
             <button class="btn btn-primary" type="submit">Send</button>
           </form>
-          <div class="small muted mt-2">Tip: the bot is intentionally rude. It’s the character.</div>
+          <div class="small muted mt-2">Pro-tip: short messages get sharper replies.</div>
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    window.RUDE_ROYE_CHAT = { mountId: "chatLog", formId: "chatForm", inputId: "chatInput" };
+    window.RUDE_ROYE_CHAT = { mountId: "chatLog", formId: "chatForm", inputId: "chatInput", typingId: "typing" };
   </script>
 {% endblock %}
 

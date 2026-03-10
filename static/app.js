@@ -5,6 +5,7 @@
   const logEl = document.getElementById(cfg.mountId);
   const formEl = document.getElementById(cfg.formId);
   const inputEl = document.getElementById(cfg.inputId);
+  const typingEl = cfg.typingId ? document.getElementById(cfg.typingId) : null;
 
   const state = {
     history: [],
@@ -37,6 +38,7 @@
 
     let reply = "No.";
     try {
+      if (typingEl) typingEl.style.opacity = "1";
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -46,6 +48,8 @@
       if (data && typeof data.reply === "string") reply = data.reply;
     } catch {
       reply = "No. (server said no too)";
+    } finally {
+      if (typingEl) typingEl.style.opacity = "0";
     }
 
     bubble("bot", reply);
@@ -60,6 +64,14 @@
     if (!text) return;
     inputEl.value = "";
     send(text);
+  });
+
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest?.("[data-prompt]");
+    if (!btn) return;
+    const prompt = btn.getAttribute("data-prompt");
+    if (!prompt) return;
+    send(prompt);
   });
 })();
 

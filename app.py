@@ -4,7 +4,14 @@ import re
 from datetime import datetime
 
 from flask import Flask, flash, jsonify, redirect, render_template, request, url_for
-from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user
+from flask_login import (
+    LoginManager,
+    UserMixin,
+    current_user,
+    login_required,
+    login_user,
+    logout_user,
+)
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -66,6 +73,13 @@ def create_app() -> Flask:
     database_url = os.environ.get("DATABASE_URL", "sqlite:///app.db").strip()
     app.config["SQLALCHEMY_DATABASE_URI"] = _normalize_database_url(database_url)
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    app.config["REQUIRE_LOGIN"] = os.environ.get("REQUIRE_LOGIN", "true").lower() in {
+        "1",
+        "true",
+        "yes",
+        "y",
+        "on",
+    }
 
     db.init_app(app)
     login_manager.init_app(app)
@@ -74,6 +88,25 @@ def create_app() -> Flask:
         db.create_all()
         _ensure_default_admin()
         _seed_starter_content_if_empty()
+
+    @app.before_request
+    def _login_first_guard():
+        if not app.config.get("REQUIRE_LOGIN", False):
+            return None
+
+        if request.endpoint in {None, "static", "login", "logout"}:
+            return None
+        if request.endpoint and request.endpoint.startswith("admin"):
+            return None
+        if request.path.startswith("/api/"):
+            # allow chat API only when logged in (keeps "login first" consistent)
+            if current_user.is_authenticated:
+                return None
+            return jsonify({"reply": "No. Login first."}), 401
+
+        if not current_user.is_authenticated:
+            return redirect(url_for("login", next=request.full_path))
+        return None
 
     @app.route("/")
     def index():
@@ -132,7 +165,10 @@ def create_app() -> Flask:
             user = User.query.filter_by(username=username).first()
             if user and user.check_password(password):
                 login_user(user)
-                return redirect(url_for("admin"))
+                nxt = request.args.get("next") or ""
+                if nxt.startswith("/") and not nxt.startswith("//"):
+                    return redirect(nxt)
+                return redirect(url_for("index"))
             flash("Invalid username or password.", "danger")
         return render_template("login.html")
 
@@ -245,8 +281,8 @@ def load_user(user_id: str):
 
 
 def _ensure_default_admin() -> None:
-    username = os.environ.get("ADMIN_USERNAME", "admin")
-    password = os.environ.get("ADMIN_PASSWORD", "admin123")
+    username = os.environ.get("ADMIN_USERNAME", "Sathee.Singh")
+    password = os.environ.get("ADMIN_PASSWORD", "Loveusubham")
     existing = User.query.filter_by(username=username).first()
     if existing:
         return

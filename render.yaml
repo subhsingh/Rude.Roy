@@ -9,7 +9,9 @@ services:
       - key: SECRET_KEY
         generateValue: true
       - key: ADMIN_USERNAME
-        value: admin
+        value: Sathee.Singh
       - key: ADMIN_PASSWORD
-        value: change-me-now-then-update-in-admin
+        value: Loveusubham
+      - key: REQUIRE_LOGIN
+        value: "true"
 

@@ -6,15 +6,14 @@
     <div class="container">
       <div class="row align-items-center g-4">
         <div class="col-lg-7">
-          <span class="badge badge-soft rounded-pill px-3 py-2 mb-3">A tiny public love-site</span>
-          <h1 class="display-6 fw-semibold mb-2">A place for quotes, songs, and videos.</h1>
-          <p class="muted mb-4">
-            Open on mobile or desktop. Anyone can view; only you can log in to add new memories.
-          </p>
+          <span class="badge badge-soft rounded-pill px-3 py-2 mb-3">Rude Roye presents</span>
+          <h1 class="display-6 fw-semibold mb-2">A private little universe.</h1>
+          <p class="muted mb-4">Photos, songs, dark-romance quotes, and a rude bot that says “no” like it’s a love language.</p>
           <div class="d-flex flex-wrap gap-2">
             <a class="btn btn-primary" href="{{ url_for('quotes') }}">Browse quotes</a>
             <a class="btn btn-outline-light" href="{{ url_for('songs') }}">Browse songs</a>
             <a class="btn btn-outline-light" href="{{ url_for('videos') }}">Browse videos</a>
+            <a class="btn btn-outline-light" href="{{ url_for('bot') }}">Talk to Rude Roye</a>
           </div>
         </div>
         <div class="col-lg-5">
@@ -65,17 +64,17 @@
     <div class="card p-3 mb-3">
       <div class="d-flex justify-content-between align-items-center mb-2">
         <div class="fw-semibold">Our little gallery</div>
-        <div class="small muted">Drop files into <code>static/media/</code> to show them here.</div>
+        <div class="small muted">A timeline of chaos, cute, and us.</div>
       </div>
-      <div class="row g-2">
+      <div class="masonry">
         {% for name in media %}
           {% set lower = name.lower() %}
-          <div class="col-6 col-md-3 col-lg-2">
-            <div class="ratio ratio-1x1 rounded overflow-hidden" style="border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04);">
+          <div class="masonry-item">
+            <div class="rounded overflow-hidden gallery-item">
               {% if lower.endswith('.mp4') or lower.endswith('.webm') %}
-                <video src="{{ url_for('static', filename='media/' ~ name) }}" muted playsinline preload="metadata" style="object-fit: cover; width: 100%; height: 100%;"></video>
+                <video src="{{ url_for('static', filename='media/' ~ name) }}" muted playsinline preload="metadata" controls style="width: 100%; height: auto; display:block;"></video>
               {% else %}
-                <img src="{{ url_for('static', filename='media/' ~ name) }}" alt="" style="object-fit: cover; width: 100%; height: 100%;" loading="lazy" />
+                <img src="{{ url_for('static', filename='media/' ~ name) }}" alt="" loading="lazy" style="width: 100%; height: auto; display:block;" />
               {% endif %}
             </div>
           </div>
@@ -83,6 +82,34 @@
       </div>
     </div>
   {% endif %}
+
+  <div class="row g-3 mb-3">
+    <div class="col-lg-7">
+      <div class="card p-4 h-100">
+        <div class="fw-semibold mb-2">For her</div>
+        <div class="muted mb-3">
+          Biryani dates. Cats & dogs. Friends reruns. Songs on loop. And the kind of quotes that sound like a dhamki but feel like home.
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+          <a class="btn btn-primary" href="{{ url_for('songs') }}">Open our songs</a>
+          <a class="btn btn-outline-light" href="{{ url_for('quotes') }}">Open quotes</a>
+          <a class="btn btn-outline-light" href="{{ url_for('bot') }}">Rude Roye Bot</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-5">
+      <div class="card p-4 h-100">
+        <div class="fw-semibold mb-2">Tonight’s vibe</div>
+        <div class="small muted mb-2">Pick one, don’t argue. (Actually argue. It’s cute.)</div>
+        <div class="vstack gap-2">
+          <div class="d-flex justify-content-between"><span>🍗 Biryani + movie</span><span class="muted">Yes</span></div>
+          <div class="d-flex justify-content-between"><span>🐾 Cats/Dogs + cuddles</span><span class="muted">Maybe</span></div>
+          <div class="d-flex justify-content-between"><span>📺 Friends rerun</span><span class="muted">Always</span></div>
+          <div class="d-flex justify-content-between"><span>🖤 Dark romance quotes</span><span class="muted">Dangerous</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="row g-3">
     <div class="col-md-4">
