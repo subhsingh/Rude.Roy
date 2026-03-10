@@ -13,9 +13,5 @@ services:
       - key: ADMIN_PASSWORD
         value: change-me-now-then-update-in-admin
       - key: DATABASE_URL
-        value: sqlite:////var/data/app.db
-    disk:
-      name: data
-      mountPath: /var/data
-      sizeGB: 1
+        value: sqlite:///app.db
 

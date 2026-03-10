@@ -41,9 +41,12 @@ Open `http://localhost:5000`
 3. When it asks, set **ADMIN_PASSWORD** to a strong password.
 4. Deploy. Render will give you a public URL like `https://...onrender.com`.
 
-Render will keep your data because `render.yaml` provisions a small persistent disk and uses:
+#### Important (Render Free tier)
 
-- `DATABASE_URL=sqlite:////var/data/app.db`
+Render’s **free tier does not support persistent disks**, so SQLite storage **may reset** on redeploy/restart.
+
+- If you want **free + persistent data**, use a free Postgres provider (Supabase/Neon) and set `DATABASE_URL` to that Postgres URL.
+- If you’re OK with occasional resets, the default config uses `DATABASE_URL=sqlite:///app.db`.
 
 ### Start command (for hosts that ask)
 
