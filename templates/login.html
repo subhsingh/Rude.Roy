@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Login · For You{% endblock %}
+
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <div class="card p-4">
+        <h2 class="h4 fw-semibold mb-3">Login</h2>
+        <form method="post" class="vstack gap-3">
+          <div>
+            <label class="form-label">Username</label>
+            <input class="form-control" name="username" autocomplete="username" required />
+          </div>
+          <div>
+            <label class="form-label">Password</label>
+            <input class="form-control" type="password" name="password" autocomplete="current-password" required />
+          </div>
+          <button class="btn btn-primary w-100" type="submit">Sign in</button>
+          <div class="small muted">
+            Default admin is set by environment variables: <code>ADMIN_USERNAME</code> and <code>ADMIN_PASSWORD</code>.
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

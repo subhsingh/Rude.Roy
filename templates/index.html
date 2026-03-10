@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}For You{% endblock %}
+
+{% block hero %}
+  <section class="hero py-5">
+    <div class="container">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+          <span class="badge badge-soft rounded-pill px-3 py-2 mb-3">A tiny public love-site</span>
+          <h1 class="display-6 fw-semibold mb-2">A place for quotes, songs, and videos.</h1>
+          <p class="muted mb-4">
+            Open on mobile or desktop. Anyone can view; only you can log in to add new memories.
+          </p>
+          <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-primary" href="{{ url_for('quotes') }}">Browse quotes</a>
+            <a class="btn btn-outline-light" href="{{ url_for('songs') }}">Browse songs</a>
+            <a class="btn btn-outline-light" href="{{ url_for('videos') }}">Browse videos</a>
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <div class="card p-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <div class="fw-semibold">Latest</div>
+              {% if current_user.is_authenticated %}
+                <a class="small" href="{{ url_for('admin') }}">Manage</a>
+              {% endif %}
+            </div>
+            <div class="vstack gap-3">
+              <div>
+                <div class="small muted mb-1">Quote</div>
+                {% if latest_quotes %}
+                  <div class="fw-semibold">{{ latest_quotes[0].text }}</div>
+                  {% if latest_quotes[0].author %}<div class="small muted">— {{ latest_quotes[0].author }}</div>{% endif %}
+                {% else %}
+                  <div class="muted">Add your first quote in Admin.</div>
+                {% endif %}
+              </div>
+              <div>
+                <div class="small muted mb-1">Song</div>
+                {% if latest_songs %}
+                  <div class="fw-semibold">{{ latest_songs[0].title }}</div>
+                  {% if latest_songs[0].artist %}<div class="small muted">{{ latest_songs[0].artist }}</div>{% endif %}
+                {% else %}
+                  <div class="muted">Add your first song in Admin.</div>
+                {% endif %}
+              </div>
+              <div>
+                <div class="small muted mb-1">Video</div>
+                {% if latest_videos %}
+                  <div class="fw-semibold">{{ latest_videos[0].title }}</div>
+                {% else %}
+                  <div class="muted">Add your first video in Admin.</div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+
+{% block content %}
+  <div class="row g-3">
+    <div class="col-md-4">
+      <div class="card h-100 p-3">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <div class="fw-semibold">Quotes</div>
+          <a class="small" href="{{ url_for('quotes') }}">View all</a>
+        </div>
+        <div class="small muted mb-2">Tiny lines that hit different.</div>
+        {% if current_user.is_authenticated %}
+          <a class="btn btn-sm btn-outline-light" href="{{ url_for('admin_quote_new') }}">Add quote</a>
+        {% else %}
+          <div class="small muted">Login to add.</div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card h-100 p-3">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <div class="fw-semibold">Songs</div>
+          <a class="small" href="{{ url_for('songs') }}">View all</a>
+        </div>
+        <div class="small muted mb-2">Links + notes for your playlist moments.</div>
+        {% if current_user.is_authenticated %}
+          <a class="btn btn-sm btn-outline-light" href="{{ url_for('admin_song_new') }}">Add song</a>
+        {% else %}
+          <div class="small muted">Login to add.</div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card h-100 p-3">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <div class="fw-semibold">Videos</div>
+          <a class="small" href="{{ url_for('videos') }}">View all</a>
+        </div>
+        <div class="small muted mb-2">YouTube/Vimeo clips you want to remember.</div>
+        {% if current_user.is_authenticated %}
+          <a class="btn btn-sm btn-outline-light" href="{{ url_for('admin_video_new') }}">Add video</a>
+        {% else %}
+          <div class="small muted">Login to add.</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

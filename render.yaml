@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: for-you
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn wsgi:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ADMIN_USERNAME
+        value: admin
+      - key: ADMIN_PASSWORD
+        value: change-me-now
+      - key: DATABASE_URL
+        value: sqlite:////var/data/app.db
+    disk:
+      name: data
+      mountPath: /var/data
+      sizeGB: 1
+

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Admin · For You{% endblock %}
+
+{% block content %}
+  <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
+    <div>
+      <h1 class="h3 fw-semibold mb-1">Admin</h1>
+      <div class="muted">Add new items. The site stays public to view.</div>
+    </div>
+    <div class="d-flex gap-2">
+      <a class="btn btn-outline-light" href="{{ url_for('quotes') }}">View quotes</a>
+      <a class="btn btn-outline-light" href="{{ url_for('songs') }}">View songs</a>
+      <a class="btn btn-outline-light" href="{{ url_for('videos') }}">View videos</a>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-md-4">
+      <div class="card p-3 h-100">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <div class="fw-semibold">Quotes</div>
+          <span class="badge rounded-pill text-bg-secondary">{{ quotes_count }}</span>
+        </div>
+        <div class="small muted mb-3">Write a line for her, or save a favorite.</div>
+        <a class="btn btn-primary" href="{{ url_for('admin_quote_new') }}">Add quote</a>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card p-3 h-100">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <div class="fw-semibold">Songs</div>
+          <span class="badge rounded-pill text-bg-secondary">{{ songs_count }}</span>
+        </div>
+        <div class="small muted mb-3">Add a link (Spotify/YouTube) + a note.</div>
+        <a class="btn btn-primary" href="{{ url_for('admin_song_new') }}">Add song</a>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card p-3 h-100">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <div class="fw-semibold">Videos</div>
+          <span class="badge rounded-pill text-bg-secondary">{{ videos_count }}</span>
+        </div>
+        <div class="small muted mb-3">Add a video link + a short note.</div>
+        <a class="btn btn-primary" href="{{ url_for('admin_video_new') }}">Add video</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}

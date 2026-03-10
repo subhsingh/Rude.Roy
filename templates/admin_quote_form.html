@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Add Quote · Admin{% endblock %}
+
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h1 class="h4 fw-semibold mb-0">Add quote</h1>
+          <a class="btn btn-sm btn-outline-light" href="{{ url_for('admin') }}">Back</a>
+        </div>
+        <form method="post" class="vstack gap-3">
+          <div>
+            <label class="form-label">Quote</label>
+            <textarea class="form-control" name="text" rows="4" required></textarea>
+          </div>
+          <div>
+            <label class="form-label">Author (optional)</label>
+            <input class="form-control" name="author" />
+          </div>
+          <button class="btn btn-primary" type="submit">Save</button>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
