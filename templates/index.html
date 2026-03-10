@@ -6,9 +6,9 @@
     <div class="container">
       <div class="row align-items-center g-4">
         <div class="col-lg-7">
-          <span class="badge badge-soft rounded-pill px-3 py-2 mb-3">Rude Roye presents</span>
-          <h1 class="display-6 fw-semibold mb-2">A private little universe.</h1>
-          <p class="muted mb-4">Photos, songs, dark-romance quotes, and a rude bot that says “no” like it’s a love language.</p>
+          <span class="badge badge-soft rounded-pill px-3 py-2 mb-3">Dark romance only</span>
+          <h1 class="display-6 fw-semibold mb-2">A little corner where your dhamki is a love language.</h1>
+          <p class="muted mb-4">Her photos. Your songs. Lines that sound like danger but feel like home. And a rude bot who never says yes on the first try.</p>
           <div class="d-flex flex-wrap gap-2">
             <a class="btn btn-primary" href="{{ url_for('quotes') }}">Browse quotes</a>
             <a class="btn btn-outline-light" href="{{ url_for('songs') }}">Browse songs</a>
@@ -60,27 +60,44 @@
 {% endblock %}
 
 {% block content %}
-  {% if media %}
-    <div class="card p-3 mb-3">
-      <div class="d-flex justify-content-between align-items-center mb-2">
-        <div class="fw-semibold">Our little gallery</div>
-        <div class="small muted">A timeline of chaos, cute, and us.</div>
-      </div>
-      <div class="masonry">
-        {% for name in media %}
-          {% set lower = name.lower() %}
-          <div class="masonry-item">
-            <div class="rounded overflow-hidden gallery-item">
-              {% if lower.endswith('.mp4') or lower.endswith('.webm') %}
-                <video src="{{ url_for('static', filename='media/' ~ name) }}" muted playsinline preload="metadata" controls style="width: 100%; height: auto; display:block;"></video>
-              {% else %}
-                <img src="{{ url_for('static', filename='media/' ~ name) }}" alt="" loading="lazy" style="width: 100%; height: auto; display:block;" />
-              {% endif %}
+  {% set has_media = media and media|length > 0 %}
+
+  {% if latest_quotes %}
+    {% set first_quote = latest_quotes[0] %}
+    {% set first_img = has_media and media[0] or None %}
+    <article class="story-card mb-4">
+      {% if first_img %}
+        <img src="{{ url_for('static', filename='media/' ~ first_img) }}" class="story-card-img" alt="" loading="lazy" />
+      {% endif %}
+      <div class="story-overlay p-4 p-md-5">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <div class="story-tag">Chapter one · For her</div>
+          {% if latest_songs %}
+            <div class="small muted">Tonight’s track: <span class="fw-semibold">{{ latest_songs[0].title }}</span></div>
+          {% endif %}
+        </div>
+        <div class="row g-4 align-items-end">
+          <div class="col-md-8">
+            <div class="fs-5 mb-2">“{{ first_quote.text }}”</div>
+            {% if first_quote.author %}
+              <div class="small muted mb-3">— {{ first_quote.author }}</div>
+            {% endif %}
+            <div class="small muted">
+              Dark rule: you can threaten to leave, but you’re not allowed to actually go.
             </div>
           </div>
-        {% endfor %}
+          <div class="col-md-4">
+            <div class="border rounded-3 p-3 small" style="background: rgba(15,23,42,0.7); border-color: rgba(248,113,113,0.4) !important;">
+              <div class="fw-semibold mb-1">Tonight’s options</div>
+              <div class="d-flex justify-content-between"><span>🍗 Biryani + movie</span><span class="muted">Yes</span></div>
+              <div class="d-flex justify-content-between"><span>🐾 Cats/Dogs + cuddles</span><span class="muted">Maybe</span></div>
+              <div class="d-flex justify-content-between"><span>📺 Friends rerun</span><span class="muted">Always</span></div>
+              <div class="d-flex justify-content-between"><span>🖤 Dark quote spam</span><span class="muted">Dangerous</span></div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </article>
   {% endif %}
 
   <div class="row g-3 mb-3">
@@ -112,46 +129,38 @@
   </div>
 
   <div class="row g-3">
-    <div class="col-md-4">
-      <div class="card h-100 p-3">
+    <div class="col-lg-8">
+      <div class="card p-4 h-100">
         <div class="d-flex justify-content-between align-items-center mb-2">
-          <div class="fw-semibold">Quotes</div>
-          <a class="small" href="{{ url_for('quotes') }}">View all</a>
+          <div class="fw-semibold">More lines, more trouble</div>
+          <a class="small" href="{{ url_for('quotes') }}">View all quotes</a>
         </div>
-        <div class="small muted mb-2">Tiny lines that hit different.</div>
-        {% if current_user.is_authenticated %}
-          <a class="btn btn-sm btn-outline-light" href="{{ url_for('admin_quote_new') }}">Add quote</a>
-        {% else %}
-          <div class="small muted">Login to add.</div>
-        {% endif %}
+        <div class="small muted mb-3">A few more dark-romance snippets pulled from your list.</div>
+        <div class="vstack gap-2 small">
+          {% for q in latest_quotes[1:4] %}
+            <div>“{{ q.text }}” {% if q.author %}<span class="muted">— {{ q.author }}</span>{% endif %}</div>
+          {% else %}
+            <div class="muted">Add a few more quotes in Admin to see them here.</div>
+          {% endfor %}
+        </div>
       </div>
     </div>
-    <div class="col-md-4">
-      <div class="card h-100 p-3">
+    <div class="col-lg-4">
+      <div class="card p-4 h-100">
         <div class="d-flex justify-content-between align-items-center mb-2">
-          <div class="fw-semibold">Songs</div>
-          <a class="small" href="{{ url_for('songs') }}">View all</a>
+          <div class="fw-semibold">Mini playlist</div>
+          <a class="small" href="{{ url_for('songs') }}">All songs</a>
         </div>
-        <div class="small muted mb-2">Links + notes for your playlist moments.</div>
-        {% if current_user.is_authenticated %}
-          <a class="btn btn-sm btn-outline-light" href="{{ url_for('admin_song_new') }}">Add song</a>
-        {% else %}
-          <div class="small muted">Login to add.</div>
-        {% endif %}
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card h-100 p-3">
-        <div class="d-flex justify-content-between align-items-center mb-2">
-          <div class="fw-semibold">Videos</div>
-          <a class="small" href="{{ url_for('videos') }}">View all</a>
+        <div class="vstack gap-2 small">
+          {% for s in latest_songs[:4] %}
+            <div class="d-flex justify-content-between">
+              <span>{{ s.title }}</span>
+              {% if s.artist %}<span class="muted">{{ s.artist }}</span>{% endif %}
+            </div>
+          {% else %}
+            <div class="muted">Add songs in Admin to build your playlist.</div>
+          {% endfor %}
         </div>
-        <div class="small muted mb-2">YouTube/Vimeo clips you want to remember.</div>
-        {% if current_user.is_authenticated %}
-          <a class="btn btn-sm btn-outline-light" href="{{ url_for('admin_video_new') }}">Add video</a>
-        {% else %}
-          <div class="small muted">Login to add.</div>
-        {% endif %}
       </div>
     </div>
   </div>

@@ -348,86 +348,86 @@ def _rude_roye_reply(message: str, history) -> str:
     if re.search(r"\b(hi|hello|hey|hii|yo)\b", low):
         return pick(
             [
-                "No.",
-                "Haan? Jaldi bol.",
-                "Speak. I’m busy being iconic.",
-                "What. Do you want biryani or drama?",
+                "No. You don’t just say hi and walk away. What do you actually want?",
+                "Hello. Now finish the sentence. I don’t read minds, I just judge them.",
+                "Hey. You get three questions today. Spend them wisely.",
+                "Haan, bol. Biryani, drama, or emotional damage—pick one.",
             ]
         )
 
     if "biryani" in low:
         return pick(
             [
-                "Biryani is the only green flag I respect. Next.",
-                "No talking. Order biryani. Then you can breathe.",
-                "If it’s not biryani, I said no.",
+                "Biryani is the only green flag I fully respect. Bring that, and I might even say yes once.",
+                "First biryani, then feelings. I’m not discussing anything serious on an empty plate.",
+                "If it’s not biryani, it’s a no. If it is biryani… it’s a dangerous maybe.",
             ]
         )
 
     if "cat" in low or "cats" in low:
         return pick(
             [
-                "Cats are superior. You’re… trying.",
-                "Fine. You can pet the cat. Not my ego though.",
-                "Me: rude. Cat: ruder. Perfect family.",
+                "Cats are superior creatures. You’re somewhere below them but slightly above the Wi‑Fi router.",
+                "Fine, we can get a cat. You can pet the cat. My ego is strictly no‑touch.",
+                "Me: rude. Cat: ruder. You: the only one allowed to stay.",
             ]
         )
 
     if "dog" in low or "dogs" in low:
         return pick(
             [
-                "Dogs are loyal. Unlike your attention span.",
-                "Ok. Dogs get a yes. You get a maybe.",
-                "If a dog likes you, I’ll consider not saying no.",
+                "Dogs are loyal. Unlike your decision making. Somehow I still like you.",
+                "Dogs get an automatic yes. You get a conditional maybe with terms and conditions.",
+                "If a dog likes you, I’m contractually obligated to reduce my rudeness by 3%.",
             ]
         )
 
     if "friends" in low:
         return pick(
             [
-                "We’re watching Friends. You’re the Joey. I’m the sarcasm.",
-                "No. Unless you bring snacks and don’t talk during the episode.",
-                "Could you BE any more obsessed? Same. Next.",
+                "We’re watching Friends. You’re Joey, obviously. I’m the sarcastic background commentary.",
+                "Fine, we’ll watch Friends again. But you’re handling snacks and you’re not allowed to talk during my favorite lines.",
+                "Could you BE any more obsessed? Same. Press play before I change my mind.",
             ]
         )
 
     if "dhamki" in low or "threat" in low:
         return pick(
             [
-                "Give dhamki properly. With style. Otherwise no.",
-                "Threaten me again and I’ll… still come back. Annoying, right?",
-                "Dhamki accepted. Terms: you stay, I pretend I don’t care.",
+                "If you’re giving me a dhamki, at least add some poetry to it. I like my threats aesthetic.",
+                "Threaten me all you want, I’ll still show up. That’s the problem and the promise.",
+                "Dhamki accepted. Fine print: you stay, I act rude, both of us know it’s fake.",
             ]
         )
 
     if "love" in low or "miss" in low:
         return pick(
             [
-                "No. (Yes.)",
-                "Miss you too. Don’t make it weird.",
-                "Say it again. I like the audacity.",
-                "I’m not romantic. I’m just… selectively soft.",
+                "No. (Which obviously means yes, but I’m not giving you the satisfaction.)",
+                "Miss you too. There, I said it. Screenshot it before I deny everything later.",
+                "Say it again. I like when you’re shameless about it.",
+                "I’m not romantic. I’m just catastrophically soft for one specific person. Annoying, right?",
             ]
         )
 
     if "song" in low or "music" in low:
         return pick(
             [
-                "Play something dramatic. We have standards.",
-                "No sad songs. Only ‘main character’ songs.",
-                "Send link. I’ll judge silently. Loudly.",
+                "Play something dramatic. Main character energy only, no side‑character playlists allowed.",
+                "No sad songs unless we’re specifically choosing violence against our own feelings.",
+                "Send me the link. I’ll judge the song and secretly add it to ‘our’ playlist.",
             ]
         )
 
     # default: rude but flirty
     return pick(
         [
-            "No.",
-            "Ask better questions.",
-            "I’m listening. Unfortunately.",
-            "Try again. With confidence.",
-            "Hmm. Still no.",
-            "Fine. Maybe. Don’t get used to it.",
+            "No. But I’m still here, so that counts for something.",
+            "Ask better questions. You’re interesting, act like it.",
+            "I’m listening. Unfortunately for both of us.",
+            "Try again, this time like you actually know I like you.",
+            "Hmm. Still no… but I’m smiling a little. Tiny bit.",
+            "Fine. Maybe. Don’t get used to it. (You absolutely will.)",
         ]
     )
 

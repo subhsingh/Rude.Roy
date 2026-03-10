@@ -11,33 +11,54 @@
       crossorigin="anonymous"
     />
     <style>
-      body { background: #0b1220; color: #e8eefc; }
-      .navbar { background: rgba(16, 24, 40, 0.75) !important; backdrop-filter: blur(8px); }
-      .card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.10); }
-      a { color: #a7c7ff; }
+      body { background: #05030a; color: #e8eefc; }
+      .navbar { background: rgba(10, 8, 20, 0.9) !important; backdrop-filter: blur(12px); }
+      .card { background: linear-gradient(135deg, rgba(18, 15, 35, 0.96), rgba(22, 16, 45, 0.96)); border: 1px solid rgba(255,255,255,0.10); }
+      a { color: #f97373; }
       .muted { color: rgba(232,238,252,0.75); }
       .badge-soft { background: rgba(167,199,255,0.15); border: 1px solid rgba(167,199,255,0.25); color: #cfe0ff; }
       .hero {
-        background: radial-gradient(1200px 500px at 20% 0%, rgba(167,199,255,0.25), transparent 60%),
-                    radial-gradient(900px 400px at 100% 20%, rgba(250, 170, 190, 0.18), transparent 55%);
+        background: radial-gradient(1200px 500px at 15% 0%, rgba(248,113,113,0.32), transparent 60%),
+                    radial-gradient(1000px 500px at 100% 10%, rgba(129,140,248,0.32), transparent 60%);
         border-bottom: 1px solid rgba(255,255,255,0.10);
       }
       .form-control, .form-select { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: #e8eefc; }
       .form-control:focus { background: rgba(255,255,255,0.08); color: #e8eefc; }
-      .btn-primary { background: #4f8cff; border-color: #4f8cff; }
-      .btn-outline-light { border-color: rgba(255,255,255,0.25); }
+      .btn-primary { background: #f97373; border-color: #f97373; }
+      .btn-outline-light { border-color: rgba(248,113,113,0.4); }
       .alert { border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.07); color: #e8eefc; }
       .creature { position: fixed; inset: auto; width: 160px; height: 160px; border-radius: 999px; filter: blur(2px); opacity: 0.55; pointer-events: none; z-index: 0; }
-      .creature.one { left: -40px; bottom: 12vh; background: radial-gradient(circle at 30% 30%, rgba(167,199,255,0.9), rgba(167,199,255,0.1) 60%, transparent 70%); animation: floaty 9s ease-in-out infinite; }
-      .creature.two { right: -50px; top: 18vh; background: radial-gradient(circle at 30% 30%, rgba(250,170,190,0.8), rgba(250,170,190,0.10) 60%, transparent 70%); animation: floaty 11s ease-in-out infinite reverse; }
+      .creature.one { left: -40px; bottom: 12vh; background: radial-gradient(circle at 30% 30%, rgba(248,113,113,0.9), rgba(248,113,113,0.1) 60%, transparent 70%); animation: floaty 9s ease-in-out infinite; }
+      .creature.two { right: -50px; top: 18vh; background: radial-gradient(circle at 30% 30%, rgba(79,70,229,0.85), rgba(79,70,229,0.10) 60%, transparent 70%); animation: floaty 11s ease-in-out infinite reverse; }
       @keyframes floaty { 0%,100% { transform: translate(0,0) scale(1);} 50% { transform: translate(14px,-18px) scale(1.04);} }
       main, nav { position: relative; z-index: 1; }
-      .masonry { column-count: 2; column-gap: 10px; }
-      @media (min-width: 768px) { .masonry { column-count: 3; } }
-      @media (min-width: 992px) { .masonry { column-count: 5; } }
-      .masonry-item { break-inside: avoid; margin: 0 0 10px 0; }
-      .gallery-item { border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04); transition: transform .18s ease, border-color .18s ease; }
-      .gallery-item:hover { transform: translateY(-2px); border-color: rgba(167,199,255,0.35); }
+      .story-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 20px;
+      }
+      .story-card-img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.45;
+        filter: grayscale(0.1);
+        transform: scale(1.05);
+      }
+      .story-overlay {
+        position: relative;
+        z-index: 1;
+        background: radial-gradient(circle at 0 0, rgba(15,23,42,0.2), transparent 55%),
+                    linear-gradient(to bottom right, rgba(5,5,15,0.92), rgba(10,10,25,0.96));
+      }
+      .story-tag {
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        font-size: 11px;
+        color: rgba(248,113,113,0.9);
+      }
     </style>
   </head>
   <body>
