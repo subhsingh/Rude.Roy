@@ -59,9 +59,61 @@
         font-size: 11px;
         color: rgba(248,113,113,0.9);
       }
+      .sketch-layer {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.6;
+      }
+      .sketch-heart {
+        stroke: rgba(248,113,113,0.85);
+        stroke-width: 2;
+        fill: transparent;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-dasharray: 260;
+        stroke-dashoffset: 260;
+        animation: draw-heart 6s ease-in-out infinite;
+      }
+      .sketch-heart.alt {
+        stroke: rgba(244,114,182,0.9);
+        animation-duration: 8s;
+        animation-delay: 1.4s;
+      }
+      .sketch-star {
+        stroke: rgba(129,140,248,0.9);
+        stroke-width: 1.5;
+        fill: transparent;
+        stroke-dasharray: 140;
+        stroke-dashoffset: 140;
+        animation: draw-heart 7s ease-in-out infinite;
+        animation-delay: 0.8s;
+      }
+      @keyframes draw-heart {
+        0% { stroke-dashoffset: 260; opacity: 0; }
+        15% { opacity: 1; }
+        40% { stroke-dashoffset: 0; opacity: 1; }
+        70% { opacity: 0.9; }
+        100% { stroke-dashoffset: 0; opacity: 0; }
+      }
     </style>
   </head>
   <body>
+    <svg class="sketch-layer" aria-hidden="true">
+      <defs>
+        <path id="heartPath" d="M24 8 C24 4 21 2 18.5 2 C15 2 13 5 12 6 C11 5 9 2 5.5 2 C3 2 0 4 0 8 C0 15 8 19 12 22 C16 19 24 15 24 8 Z" />
+      </defs>
+      <g transform="translate(40,140) scale(4)">
+        <use href="#heartPath" class="sketch-heart" />
+      </g>
+      <g transform="translate(1040,80) scale(3.2)">
+        <use href="#heartPath" class="sketch-heart alt" />
+      </g>
+      <g transform="translate(1060,420) scale(2.4)">
+        <polygon class="sketch-star" points="10,0 12.5,6.5 19.5,7 14,11.5 15.5,18 10,14.5 4.5,18 6,11.5 0.5,7 7.5,6.5" />
+      </g>
+    </svg>
     <div class="creature one" aria-hidden="true"></div>
     <div class="creature two" aria-hidden="true"></div>
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
