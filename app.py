@@ -67,6 +67,13 @@ class Video(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
 
+class Media(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    filename = db.Column(db.String(500), unique=True, nullable=False)
+    visible = db.Column(db.Boolean, default=True, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+
+
 def create_app() -> Flask:
     app = Flask(__name__)
     app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-change-me")
@@ -86,6 +93,7 @@ def create_app() -> Flask:
 
     with app.app_context():
         db.create_all()
+        _sync_media_table()
         _ensure_default_admin()
         _seed_starter_content_if_empty()
 
@@ -113,13 +121,17 @@ def create_app() -> Flask:
         latest_quotes = Quote.query.order_by(Quote.created_at.desc()).limit(5).all()
         latest_songs = Song.query.order_by(Song.created_at.desc()).limit(5).all()
         latest_videos = Video.query.order_by(Video.created_at.desc()).limit(5).all()
-        media = _list_media_files()
+        media_items = (
+            Media.query.filter_by(visible=True)
+            .order_by(Media.created_at.asc())
+            .all()
+        )
         return render_template(
             "index.html",
             latest_quotes=latest_quotes,
             latest_songs=latest_songs,
             latest_videos=latest_videos,
-            media=media,
+            media_items=media_items,
         )
 
     @app.route("/quotes")
@@ -224,6 +236,28 @@ def create_app() -> Flask:
 
         return render_template("admin_account.html")
 
+    @app.route("/admin/media", methods=["GET"])
+    @login_required
+    def admin_media():
+        _sync_media_table()
+        items = Media.query.order_by(Media.created_at.asc()).all()
+        return render_template("admin_media.html", items=items)
+
+    @app.route("/admin/media/<int:media_id>/toggle", methods=["POST"])
+    @login_required
+    def admin_media_toggle(media_id: int):
+        item = db.session.get(Media, media_id)
+        if not item:
+            flash("That media item does not exist anymore.", "warning")
+            return redirect(url_for("admin_media"))
+        item.visible = not item.visible
+        db.session.commit()
+        flash(
+            f"{'Showing' if item.visible else 'Hiding'} “{item.filename}”.",
+            "success",
+        )
+        return redirect(url_for("admin_media"))
+
     @app.route("/admin/quotes/new", methods=["GET", "POST"])
     @login_required
     def admin_quote_new():
@@ -303,6 +337,23 @@ def _list_media_files():
     except FileNotFoundError:
         return []
     return items[:24]
+
+
+def _sync_media_table() -> None:
+    filenames = _list_media_files()
+    if not filenames:
+        return
+
+    existing = {m.filename: m for m in Media.query.all()}
+    changed = False
+
+    for name in filenames:
+        if name not in existing:
+            db.session.add(Media(filename=name, visible=True))
+            changed = True
+
+    if changed:
+        db.session.commit()
 
 
 def _seed_starter_content_if_empty() -> None:

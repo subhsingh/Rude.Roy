@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Media · Admin{% endblock %}
+
+{% block content %}
+  <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
+    <div>
+      <h1 class="h3 fw-semibold mb-1">Media</h1>
+      <div class="muted">Every photo, gif, and video. Hide or show them without deleting.</div>
+    </div>
+    <div class="small muted">
+      To add new pictures, drop files into <code>static/media/</code> and redeploy.
+    </div>
+  </div>
+
+  <div class="row g-3">
+    {% for m in items %}
+      {% set lower = m.filename.lower() %}
+      <div class="col-6 col-md-4 col-lg-3">
+        <div class="card h-100 p-2">
+          <div class="ratio ratio-3x4 rounded overflow-hidden mb-2" style="background: rgba(15,23,42,0.9);">
+            {% if lower.endswith('.mp4') or lower.endswith('.webm') %}
+              <video src="{{ url_for('static', filename='media/' ~ m.filename) }}" muted playsinline preload="metadata" style="object-fit: cover; width: 100%; height: 100%;"></video>
+            {% else %}
+              <img src="{{ url_for('static', filename='media/' ~ m.filename) }}" alt="" style="object-fit: cover; width: 100%; height: 100%;" loading="lazy" />
+            {% endif %}
+          </div>
+          <div class="small text-truncate" title="{{ m.filename }}">{{ m.filename }}</div>
+          <div class="d-flex justify-content-between align-items-center mt-2">
+            <span class="badge rounded-pill {{ 'text-bg-success' if m.visible else 'text-bg-secondary' }}">
+              {{ 'Shown' if m.visible else 'Hidden' }}
+            </span>
+            <form method="post" action="{{ url_for('admin_media_toggle', media_id=m.id) }}">
+              <button class="btn btn-sm btn-outline-light" type="submit">
+                {% if m.visible %}Hide{% else %}Show{% endif %}
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <div class="col-12">
+        <div class="card p-4">
+          <div class="muted">No media found in <code>static/media/</code>.</div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}
+
