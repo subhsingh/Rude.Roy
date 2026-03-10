@@ -122,6 +122,39 @@ def create_app() -> Flask:
             videos_count=videos_count,
         )
 
+    @app.route("/admin/account", methods=["GET", "POST"])
+    @login_required
+    def admin_account():
+        if request.method == "POST":
+            current_password = request.form.get("current_password", "")
+            new_password = request.form.get("new_password", "")
+            confirm_password = request.form.get("confirm_password", "")
+
+            if not current_password or not new_password:
+                flash("Current and new password are required.", "warning")
+                return render_template("admin_account.html")
+
+            if new_password != confirm_password:
+                flash("New passwords do not match.", "warning")
+                return render_template("admin_account.html")
+
+            if len(new_password) < 8:
+                flash("Use at least 8 characters for the new password.", "warning")
+                return render_template("admin_account.html")
+
+            from flask_login import current_user
+
+            if not current_user.check_password(current_password):
+                flash("Current password is incorrect.", "danger")
+                return render_template("admin_account.html")
+
+            current_user.set_password(new_password)
+            db.session.commit()
+            flash("Password updated.", "success")
+            return redirect(url_for("admin"))
+
+        return render_template("admin_account.html")
+
     @app.route("/admin/quotes/new", methods=["GET", "POST"])
     @login_required
     def admin_quote_new():

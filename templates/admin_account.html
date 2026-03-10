@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Account · Admin{% endblock %}
+
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-md-7 col-lg-6">
+      <div class="card p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h1 class="h4 fw-semibold mb-0">Account</h1>
+          <a class="btn btn-sm btn-outline-light" href="{{ url_for('admin') }}">Back</a>
+        </div>
+
+        <div class="muted mb-3">Change your admin password.</div>
+
+        <form method="post" class="vstack gap-3">
+          <div>
+            <label class="form-label">Current password</label>
+            <input class="form-control" type="password" name="current_password" autocomplete="current-password" required />
+          </div>
+          <div>
+            <label class="form-label">New password</label>
+            <input class="form-control" type="password" name="new_password" autocomplete="new-password" required />
+            <div class="form-text muted">Use 8+ characters.</div>
+          </div>
+          <div>
+            <label class="form-label">Confirm new password</label>
+            <input class="form-control" type="password" name="confirm_password" autocomplete="new-password" required />
+          </div>
+          <button class="btn btn-primary" type="submit">Update password</button>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
