@@ -20,11 +20,12 @@
     b.className = "px-3 py-2 rounded-3";
     b.style.maxWidth = "85%";
     b.style.whiteSpace = "pre-wrap";
-    b.style.border = "1px solid rgba(255,255,255,0.12)";
+    b.style.border = "1px solid rgba(255,255,255,0.25)";
     b.style.background =
       role === "user"
-        ? "rgba(79,140,255,0.20)"
-        : "rgba(255,255,255,0.06)";
+        ? "rgba(79,140,255,0.35)"
+        : "rgba(15,23,42,0.9)";
+    b.style.color = "#ffffff";
     b.textContent = text;
 
     row.appendChild(b);
